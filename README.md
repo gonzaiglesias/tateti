@@ -1,2 +1,2 @@
-# tateti
+# Tateti
 Tateti game
