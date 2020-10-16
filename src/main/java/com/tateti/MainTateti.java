@@ -1,3 +1,5 @@
+package com.tateti;
+
 import JuegoTateti.JugarTatetiInterface;
 import Tablero.Jugador;
 import Tablero.Posicion;
@@ -20,7 +22,7 @@ public class MainTateti {
 				   tablero.printTablero();	
 				   Posicion posAdversario = getPosicionPorPantalla();
 			       while (tablero.getValueAt(posAdversario.posX, posAdversario.posY) != Jugador.SIN_JUGADOR) {
-						System.out.println("Posici�n inv�lida, ya se encuentra ocupada");
+						System.out.println("Posicion invalida, ya se encuentra ocupada");
 						posAdversario = getPosicionPorPantalla();
 					 }
 			       
@@ -32,7 +34,7 @@ public class MainTateti {
 							if (tablero.getValueAt(posMaquina.posX, posMaquina.posY ) == Jugador.SIN_JUGADOR) {
 							     tablero.setValueAt(posMaquina.posX, posMaquina.posY, Jugador.JUGADOR_DOS);
 							}else{
-								System.out.println("Resultado inv�lido del algoritmo por arrojar una casilla que ya esta ocupada");
+								System.out.println("Resultado invalido del algoritmo por arrojar una casilla que ya esta ocupada");
 								cortarCiclo = true;
 							}
 			        }else {

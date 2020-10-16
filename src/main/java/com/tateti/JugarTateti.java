@@ -1,3 +1,5 @@
+package com.tateti;
+
 import JuegoTateti.JugarTatetiInterface;
 import Tablero.Posicion;
 import Tablero.TableroTateti;
