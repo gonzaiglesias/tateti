@@ -10,24 +10,22 @@ public class JugarTateti implements JugarTatetiInterface{
 
 	private static final int VALOR_MENOR = -999;
 	private static final int VALOR_MAYOR = 999;
+	private static final int NIVEL_INICIAL = 0;
 
 	public Posicion unaJugadaTateti(TableroTateti tablero) {
-		Posicion posActual = new Posicion();
 		Posicion mejorPosicion = new Posicion();
 		int mejorValor = VALOR_MENOR;
-		for(int i = 0; i < 3; i++) {
-			for(int j = 0; j< 3; j++) {
-				if (tablero.getValueAt(i,j) == Jugador.SIN_JUGADOR) {
-					posActual.posX = i;
-					posActual.posY = j;
-					MarcarPosicion(tablero, posActual, Jugador.JUGADOR_DOS);
-					int valorActual = Tateti(tablero, posActual, VALOR_MAYOR, Jugador.JUGADOR_UNO);
+		for(int posX = 0; posX < 3; posX++) {
+			for(int posY = 0; posY< 3; posY++) {
+				if (tablero.getValueAt(posX,posY) == Jugador.SIN_JUGADOR) {
+					MarcarPosicion(tablero, posX, posY, Jugador.JUGADOR_DOS);
+					int valorActual = Tateti(tablero, Jugador.JUGADOR_UNO, NIVEL_INICIAL);
 					if (valorActual > mejorValor) {
-						mejorPosicion.posX = i;
-						mejorPosicion.posY = j;
+						mejorPosicion.posX = posX;
+						mejorPosicion.posY = posY;
 						mejorValor = valorActual;
 					}
-					DesmarcarTablero(tablero, i, j);
+					DesmarcarTablero(tablero, posX, posY);
 				}
 			}
 		}
@@ -35,41 +33,40 @@ public class JugarTateti implements JugarTatetiInterface{
 	}
 
 
-	private int Tateti(TableroTateti tablero, Posicion pos, int valor, Jugador jugador)
+	private int Tateti(TableroTateti tablero, Jugador jugador, int nivel)
 	{
 		if(tablero.getResult() != Resultado.SIN_GANADOR){
-			return resultadoTablero(tablero);
+			return resultadoTablero(tablero, nivel);
 		}
-
-		Posicion posicionLibre = new Posicion();
-		for(int i = 0; i < 3; i++) {
-			for(int j = 0; j< 3; j++) {
-				if (tablero.getValueAt(i, j) == Jugador.SIN_JUGADOR && (valor == VALOR_MAYOR || valor == VALOR_MENOR)) {
-					posicionLibre.posX = i;
-					posicionLibre.posY = j;
-					MarcarPosicion(tablero, posicionLibre, jugador);
+		int valor = asignarValorInicial(jugador);
+		for(int posX = 0; posX < 3; posX++) {
+			for(int posY = 0; posY< 3; posY++) {
+				if (tablero.getValueAt(posX, posY) == Jugador.SIN_JUGADOR) {
+					MarcarPosicion(tablero, posX, posY , jugador);
 					if (jugador == Jugador.JUGADOR_UNO){
-						valor = VALOR_MAYOR;
-						valor = Math.min(valor, Tateti(tablero, posicionLibre, valor, Jugador.JUGADOR_DOS));
+						valor = Math.min(valor, Tateti(tablero, Jugador.JUGADOR_DOS, nivel+1));
 					}else{
-						valor = VALOR_MENOR;
-						valor = Math.max(valor, Tateti(tablero, posicionLibre, valor, Jugador.JUGADOR_UNO));
+						valor = Math.max(valor, Tateti(tablero, Jugador.JUGADOR_UNO, nivel+1));
 					}
-					DesmarcarTablero(tablero, posicionLibre.posX, posicionLibre.posY);
+					DesmarcarTablero(tablero, posX, posY);
 				}
 			}
 		}
 		return valor;
 	}
 
-	private int resultadoTablero(TableroTateti tablero) {
+	private int asignarValorInicial(Jugador jugador) {
+		return jugador == Jugador.JUGADOR_UNO ? VALOR_MAYOR : VALOR_MENOR;
+	}
+
+	private int resultadoTablero(TableroTateti tablero, int nivel) {
 		switch(tablero.getResult()) {
 			case EMPATE:
 				return 0;
 			case GANO_JUGADOR1:
-				return -1;
+				return -10+nivel;
 			case GANO_JUGADOR2:
-				return 1;
+				return 10-nivel;
 		}
 		return 0;
 	}
@@ -78,7 +75,7 @@ public class JugarTateti implements JugarTatetiInterface{
 		tablero.setValueAt(posX, posY, Jugador.SIN_JUGADOR);
 	}
 
-	private void MarcarPosicion(TableroTateti tablero, Posicion pos, Jugador jugador) {
-		tablero.setValueAt(pos.posX, pos.posY, jugador);
+	private void MarcarPosicion(TableroTateti tablero, int posX, int posY, Jugador jugador) {
+		tablero.setValueAt(posX, posY, jugador);
 	}
 }
