@@ -77,7 +77,6 @@ public class JugarTatetiTest {
         tablero.setValueAt(1, 0, Jugador.JUGADOR_UNO);
         tablero.setValueAt(1, 1, Jugador.JUGADOR_UNO);
         tablero.setValueAt(0, 0, Jugador.JUGADOR_DOS);
-        tablero.printTablero();
         //When
         Posicion posMaquina = jugar.unaJugadaTateti(tablero);
         tablero.setValueAt(posMaquina.posX, posMaquina.posY, Jugador.JUGADOR_DOS);
